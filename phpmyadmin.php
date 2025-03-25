@@ -1,4 +1,46 @@
 <?php
+session_start();
+
+// Définition des identifiants d'accès
+$utilisateur = "admin";
+$mot_de_passe = "LaisseMoiDormir123";
+
+// Vérification du formulaire de connexion
+if (isset($_POST['username']) && isset($_POST['password'])) {
+    if ($_POST['username'] === $utilisateur && $_POST['password'] === $mot_de_passe) {
+        $_SESSION['loggedin'] = true;
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    } else {
+        $erreur = "Identifiants incorrects !";
+    }
+}
+
+// Rediriger vers la connexion si l'utilisateur n'est pas authentifié
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    ?>
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Connexion</title>
+    </head>
+    <body>
+        <h2>Connexion requise</h2>
+        <form method="post">
+            <label>Nom d'utilisateur :</label>
+            <input type="text" name="username" required><br>
+            <label>Mot de passe :</label>
+            <input type="password" name="password" required><br>
+            <button type="submit">Se connecter</button>
+        </form>
+        <?php if (isset($erreur)) echo "<p style='color:red;'>$erreur</p>"; ?>
+    </body>
+    </html>
+    <?php
+    exit();
+}
+
 // Connexion à la base de données
 try {
     $bdd = new PDO('mysql:host=localhost;dbname=forum;charset=utf8', 'root', '&6HAUTdanslaFauré');
@@ -71,17 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['query'])) {
 </head>
 <body>
 
-    <h2>Interface Admin MySQL - Table Étudiants</h2>
+    <h2>Interface Admin MySQL - Table etudiant</h2>
 
-    <form method="POST">
-        <label for="query">Requête SQL :</label><br>
-        <textarea name="query" id="query" rows="4" cols="50" placeholder="Exemple : SELECT * FROM etudiant WHERE nom='Dupont';"></textarea><br>
-        <button type="submit">Exécuter</button>
-    </form>
-
-    <?php if (!empty($message)) : ?>
-        <p style="color: red;"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></p>
-    <?php endif; ?>
 
     <?php if (!empty($resultats)) : ?>
         <h3>Résultats :</h3>
@@ -109,3 +142,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['query'])) {
 
 </body>
 </html>
+
