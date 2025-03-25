@@ -3,7 +3,7 @@ session_start();
 
 // Définition des identifiants d'accès
 $utilisateur = "admin";
-$mot_de_passe = "LaisseMoiDormir123";
+$mot_de_passe = "LaisseMoiDormir3274";
 
 // Vérification du formulaire de connexion
 if (isset($_POST['username']) && isset($_POST['password'])) {
