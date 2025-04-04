@@ -29,9 +29,13 @@ if (!empty($_POST['prenom']) && !empty($_POST['nom']) && !empty($_POST['mail']) 
         // Redirection avec message de succès
         header("Location: succesFormulaire.html?success=1");
         exit();
-    } else {
-        // Redirection avec message d'erreur (email déjà utilisé)
-        header("Location: formulaire.php?error=1");
+        
+    } else { // Si l'email existe, on met à jour les informations
+        $update = $bdd->prepare('UPDATE etudiant SET nom = ?, prenom = ?, telephone = ?, dateNaissance = ?, mdp = ? WHERE mail = ?');
+        $update->execute([$nom, $prenom, $telephone, $dateNaissance, $mdp, $mail]);
+
+        // Redirection avec message de mise à jour
+        header("Location: succesFormulaire.html?updated=1");
         exit();
     }
 } else {
